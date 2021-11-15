@@ -1,2 +1,2 @@
 # ESP 32 
- Projetos feitos no VSCode, utilizando a base do Arduino.
+ ESP 32 simple projects, created in VSCode, with the Platform IO extention, using Arduino's framework.
