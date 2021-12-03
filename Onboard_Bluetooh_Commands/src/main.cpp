@@ -4,19 +4,17 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-BluetoothSerial SerialBT;
+BluetoothSerial SerialBT; 
 
 //SETUP
 
 #define LED_BUILTIN  33
 #define LED_FLASH 4
 #define GPIOOUT 2
-#define GPIOIN 15
 char command;
 char* statusLED = "LED Apagado ";
 char* statusFLASH = "FLASH Apagado ";
 char* statusGPIOOUT = "GPIO2OUT Desativado ";
-char* statusGPIOIN = "GPIO15IN Desativado";
 
 
 void setup() {
@@ -32,13 +30,12 @@ void setup() {
 void loop() {
   command  = (char)SerialBT.read();
   if (command == 'H') {
-    SerialBT.println("COMANDOS:\nA/B = LED \nC/D = FLASH\nD/E = \nGPIO2OUT = E/F\nGPIO15IN = G/H\nS = STATUS\nH = HELP");
+    SerialBT.println("COMANDOS:\nA/B = LED \nC/D = FLASH\nD/E = \nGPIO2OUT = E/F\nS = STATUS\nH = HELP");
   }
   if (command == 'S') {
     SerialBT.println(statusLED);
     SerialBT.println(statusFLASH);
     SerialBT.println(statusGPIOOUT);
-    SerialBT.println(statusGPIOIN);
   }
   if (Serial.available()) {
     SerialBT.write(Serial.read());
@@ -74,16 +71,6 @@ void loop() {
       digitalWrite(GPIOOUT, LOW);
       statusGPIOOUT = "GPIO2OUT Desativado";
       SerialBT.println(statusGPIOOUT);
-    }
-    if (command == 'G') {
-      digitalWrite(GPIOIN, HIGH);
-      statusGPIOIN = "GPIO15IN Ativado";
-      SerialBT.println(statusGPIOIN);
-    }
-    if (command == 'H') {
-      digitalWrite(GPIOIN, LOW);
-      statusGPIOIN = "GPIO15IN Desativado";
-      SerialBT.println(statusGPIOIN);
     }
   }
   delay(20);
