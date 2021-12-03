@@ -6,8 +6,10 @@
 //Definição dos pinos
 #define LED_conexao  33
 #define LED_azul     2
+#define LED_vermelho 12
 
 char* LED_azulSTATUS;
+char* LED_vermelhoSTATUS;
 
 #define WLAN_SSID       "akso"      // Nome da Rede Wifi
 #define WLAN_PASS       "111333555"     // Senha da Rede Wifi
@@ -16,8 +18,8 @@ char* LED_azulSTATUS;
 
 #define AIO_SERVER      "io.adafruit.com" //Adafruit Servidor
 #define AIO_SERVERPORT  1883
-#define AIO_USERNAME    "AncapCap"      //Insira o usuario criado na adafruit io
-#define AIO_KEY         "aio_GSTF3689qVziDxw7kDWjj3RUxPPJ" //Insira a chave de comunicação obtida na adafruit io
+#define AIO_USERNAME    "**********"      //Insira o usuario criado na adafruit io
+#define AIO_KEY         "**********************" //Insira a chave de comunicação obtida na adafruit io
 
 //Váriáveis utilizadas
 
@@ -32,9 +34,10 @@ unsigned long atual;
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
-//Váriáveis criadas para comunicação com o MQTT
+//Váriáveis criadas para comunlicação com o MQTT
 Adafruit_MQTT_Publish   sensor = Adafruit_MQTT_Publish  (&mqtt, AIO_USERNAME "/feeds/Status Alarme");   // Crie aqui sua variavel
-Adafruit_MQTT_Subscribe Light1 = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/LED_azul");        // a palavra feeds deve estar em todos
+Adafruit_MQTT_Subscribe Light1 = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/LED_azul"); 
+Adafruit_MQTT_Subscribe Light2 = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/led_vermelho");// a palavra feeds deve estar em todos
 
 //Funções
 void MQTT_connect(); //Determina a conexão MQTT
@@ -47,12 +50,14 @@ void setup() {
   //Definição de saida e entrada de cada pino
   pinMode(LED_conexao, OUTPUT);
   pinMode(LED_azul, OUTPUT);
+  pinMode(LED_vermelho, OUTPUT);
 
   //Desliga o LED de status de conexão do Wifi
   digitalWrite(LED_conexao, HIGH);
 
   //Declaração de Tópicos de Leitura
   mqtt.subscribe(&Light1);
+  mqtt.subscribe(&Light2);
 
 }
 
@@ -73,6 +78,15 @@ void loop() {
       Serial.print("STATUS LED: ");
       Serial.println(LED_azulSTATUS);
     }
+    if (subscription == &Light2) {
+      Serial.print(F("Got: "));
+      Serial.println((char *)Light2.lastread);
+      int Light2_State = atoi((char *)Light2.lastread);
+      digitalWrite(LED_vermelho, Light2_State);
+      LED_vermelhoSTATUS = (char*)Light2.lastread;
+      Serial.print("STATUS LED: ");
+      Serial.println(LED_vermelhoSTATUS);
+    }
   }
   if (LED_azulSTATUS == "11") {
     digitalWrite(LED_azul, HIGH);
@@ -80,6 +94,14 @@ void loop() {
   }
   if (LED_azulSTATUS == "00") {
     digitalWrite(LED_azul, LOW);
+    Serial.println("DESLIGADO");
+  }
+  if (LED_vermelhoSTATUS == "11") {
+    digitalWrite(LED_vermelho, HIGH);
+    Serial.println("LIGADO");
+  }
+  if (LED_vermelhoSTATUS == "00") {
+    digitalWrite(LED_vermelho, LOW);
     Serial.println("DESLIGADO");
   }
 }
