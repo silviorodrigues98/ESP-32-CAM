@@ -22,12 +22,15 @@
 const char* ssid = "akso";
 const char* password = "111333555";
 
+#define isConnected 33
+
 void startCameraServer();
 
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
+  pinMode(isConnected, OUTPUT);
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -66,6 +69,7 @@ void setup() {
 #if defined(CAMERA_MODEL_ESP_EYE)
   pinMode(13, INPUT_PULLUP);
   pinMode(14, INPUT_PULLUP);
+  
 #endif
 
   // camera init
@@ -95,6 +99,11 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    digitalWrite(isConnected, LOW);
+    delay(200);
+    digitalWrite(isConnected, HIGH);
+    delay(200);
+    
   }
   Serial.println("");
   Serial.println("WiFi connected");
@@ -104,6 +113,9 @@ void setup() {
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
+  while (WiFi.status() == WL_CONNECTED){
+    digitalWrite(isConnected, LOW);
+  }
 }
 
 void loop() {
