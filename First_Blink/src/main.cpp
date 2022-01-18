@@ -15,10 +15,10 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   digitalWrite(LED_BUILTIN, HIGH);
-  Serial.print("HIGH");
+  Serial.print("LED HIGH");
   delay(timeDelay);
   digitalWrite(LED_BUILTIN, LOW);
-  Serial.println("LOW");
+  Serial.println("LED LOW");
   delay(timeDelay);
   digitalWrite(FLASH, HIGH);
   Serial.print("FLASH HIGH");
