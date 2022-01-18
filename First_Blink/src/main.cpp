@@ -21,9 +21,9 @@ void loop()
   Serial.println("LOW");
   delay(timeDelay);
   digitalWrite(FLASH, HIGH);
-  Serial.print("HIGH");
+  Serial.print("FLASH HIGH");
   delay(timeDelay);
   digitalWrite(FLASH, LOW);
-  Serial.println("LOW");
+  Serial.println("FLASH LOW");
   delay(timeDelay);
 }
