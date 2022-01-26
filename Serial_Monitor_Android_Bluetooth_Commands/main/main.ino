@@ -47,7 +47,7 @@ void setup() {
 void loop() {
   command  = (char)SerialBT.read();
   if (command == 'H' || isConnected) {
-    SerialBT.println("COMANDOS:\nA/B = LED \nC/D = FLASH\nD/E = \nGPIO2OUT = E/F\nS = STATUS\nH = HELP");
+    SerialBT.println("COMANDOS:\nA/B = LED \nC/D = FLASH\nGPIO2OUT = E/F\nS = STATUS\nH = HELP");
   }
   if (command == 'S') {
     SerialBT.println(statusLED);
