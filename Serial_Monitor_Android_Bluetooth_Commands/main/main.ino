@@ -4,7 +4,18 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-BluetoothSerial SerialBT; 
+BluetoothSerial SerialBT;
+bool isConnected = false;
+void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
+  if (event == ESP_SPP_SRV_OPEN_EVT) {
+    Serial.println("Client Connected");
+    isConnected = true;
+  }
+  else{
+    isConnected = false;
+  }
+}
+
 
 //SETUP
 
@@ -19,17 +30,23 @@ char* statusGPIOOUT = "GPIO2OUT Desativado ";
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("ESP32-CAM Silvio"); //Bluetooth device name
-  Serial.println("\nBluetooth ativado, pode parear!!!");
+  if (!SerialBT.begin("ESP32")) {
+    Serial.println("Ocorreu um erro ao se inicializar o Bluetooth");
+  } else {
+    Serial.println("Bluetooth inicializado, pode parear!!!");
+  }
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(LED_FLASH, OUTPUT);
   pinMode(GPIOOUT, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
+  SerialBT.register_callback(callback);
+
+
 }
 
 void loop() {
   command  = (char)SerialBT.read();
-  if (command == 'H') {
+  if (command == 'H' || isConnected) {
     SerialBT.println("COMANDOS:\nA/B = LED \nC/D = FLASH\nD/E = \nGPIO2OUT = E/F\nS = STATUS\nH = HELP");
   }
   if (command == 'S') {
