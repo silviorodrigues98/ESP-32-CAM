@@ -144,7 +144,7 @@ void handleNewMessages(int numNewMessages) {
     String from_name = bot.messages[i].from_name;
     if (text == "/comandos") {
       String welcome = "Bem vindo(a) , " + from_name + "\n";
-      welcome += "Use os seguintes comandos para interagir com a ESP32-CAM do Silvio \n";
+      welcome += "Use os seguintes comandos para interagir com a ESP32-CAM \n";
       welcome += "/foto : tira uma nova foto.\n";
       welcome += "/flash : ativa ou desativa o flash \n";
       bot.sendMessage(CHAT_ID, welcome, "");
